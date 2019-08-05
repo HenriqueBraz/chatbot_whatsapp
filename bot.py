@@ -15,6 +15,8 @@ from chatterbot.trainers import ListTrainer
 from chatterbot import ChatBot
 import re
 import os
+import requests
+import json
 import logging
 
 
@@ -28,7 +30,6 @@ class wppbot:
         
         self.bot = ChatBot(nome_bot)
         self.trainer = ListTrainer(self.bot)
-        #self.bot.set_trainer(ListTrainer)
         self.chrome = '/home/henrique/chatbot/chatbot_whatsapp/chromedriver' #Setamos onde está nosso chromedriver.
         self.options = webdriver.ChromeOptions() #Configuramos um profile no chrome para não precisar logar no whats toda vez que iniciar o bot.
         self.options.add_argument(r"user-data-dir="+self.dir_path+"/profile/wpp")
@@ -55,7 +56,8 @@ class wppbot:
         self.element_presence(By.XPATH,'//*[@id="side"]/div[1]/div/label/input',30)
         self.caixa_de_pesquisa = self.driver.find_element_by_xpath('//*[@id="side"]/div[1]/div/label/input')
         self.caixa_de_pesquisa.send_keys(nome_contato)
-        time.sleep(2)   
+        time.sleep(2)
+        self.element_presence(By.XPATH,'//span[@title = "{}"]',30)
         self.contato = self.driver.find_element_by_xpath('//span[@title = "{}"]'.format(nome_contato))
         self.contato.click()
         time.sleep(2)
@@ -82,16 +84,113 @@ class wppbot:
         post = self.driver.find_elements_by_class_name('_1zGQT') #seta todas as mensagens no grupo
         ultimo = len(post) - 1 #pega o índice da última conversa.
         texto = post[ultimo].find_element_by_css_selector('span.selectable-text').text #pega o texto da última conversa
-        return texto    
+        return texto
+
+
+    def responde(self,texto):
+        #método responde: parâmetro texto que é o  retorno do método escuta.
+        response = self.bot.get_response(texto)
+        response = str(response)
+        response = 'Alfio_bot: ' + response
+        self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[2]/div/div[2]',30)
+        self.caixa_de_mensagem = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
+        self.caixa_de_mensagem.send_keys(response)
+        time.sleep(1)
+        self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[3]/button',30)
+        self.botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
+        self.botao_enviar.click()
+        
+        
+    def treina(self,nome_pasta):
+        for treino in os.listdir(nome_pasta):
+            conversas = open(nome_pasta+'/'+treino, 'r').readlines()
+            self.trainer.train(conversas)
+            
+            
+    def aprender(self,ultimo_texto,frase_inicial,frase_final,frase_erro):
+        self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[2]/div/div[2]',30)
+        self.caixa_de_mensagem = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
+        self.caixa_de_mensagem.send_keys(frase_inicial)
+        time.sleep(1)
+        self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[3]/button',30)
+        self.botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
+        self.botao_enviar.click()
+        self.x = True
+        while self.x == True:
+            texto = self.escuta()
+
+            if texto != ultimo_texto and re.match(r'^::', texto):
+                if texto.find('?') != -1:
+                    ultimo_texto = texto
+                    texto = texto.replace('::', '')
+                    texto = texto.lower()
+                    texto = texto.replace('?', '?*')
+                    texto = texto.split('*')
+                    novo = []
+                    for elemento in texto:
+                        elemento = elemento.strip()
+                        novo.append(elemento)
+
+                    self.trainer.train(novo)
+                    self.caixa_de_mensagem.send_keys(frase_final)
+                    time.sleep(1)
+                    self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[3]/button',30)
+                    self.botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
+                    self.botao_enviar.click()
+                    self.x = False
+                    return ultimo_texto
+                else:
+                    self.caixa_de_mensagem.send_keys(frase_erro)
+                    time.sleep(1)
+                    self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[3]/button',30)
+                    self.botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
+                    self.botao_enviar.click()
+                    self.x = False
+                    return ultimo_texto
+            else:
+                ultimo_texto = texto
+
+    def noticias(self):
+
+        req = requests.get('https://newsapi.org/v2/top-headlines?sources=globo&pageSize=5&apiKey=f6fdb7cb0f2a497d92dbe719a29b197f')
+        noticias = json.loads(req.text)
+
+        for news in noticias['articles']:
+            titulo = news['title']
+            link = news['url']
+            new = 'bot: ' + titulo + ' ' + link + '\n'
+
+            self.caixa_de_mensagem.send_keys(new)
+            time.sleep(1)            
+            
         
         
 if __name__ == "__main__":
     
     logging.basicConfig(level=logging.DEBUG,format='%(asctime)s-%(levelname)s-%(message)s')
+    logging.disable(logging.DEBUG)
     bot = wppbot('Alfio')
-    bot.inicia('Lembrete')
-    bot.saudacao(['Não liguem, sou um bot em teste'])
-    logging.info(bot.escuta())
+    bot.treina('treino')
+    bot.inicia('Treino_bot')
+    bot.saudacao(['Alfio_bot: Oi sou o Alfio_bot e entrei no grupo!','Alfio_bot: Use :: no início para falar comigo!'])
+    ultimo_texto = ''
+    
+    while True:
+
+        texto = bot.escuta()
+
+        if texto != ultimo_texto and re.match(r'^::', texto): ##Validação se possuí o comando :: no início para que ele responda.
+            ultimo_texto = texto
+            texto = texto.replace('::', '')
+            texto = texto.lower()
+            if (texto == 'aprender' or texto == ' aprender' or texto == 'ensinar' or texto == ' ensinar'):
+                bot.aprender(texto,'Alfio_bot: Escreva a pergunta e após o ? a resposta.','Alfio_bot: Obrigado por ensinar. Não que eu precise, afinal eu sou o Alfio_bot, só errei uma vez na vida: quando pensei estar errado!','Alfio_bot: Você escreveu algo errado! Comece novamente..')
+                
+            elif (texto == 'noticias' or texto == ' noticias' or texto == 'noticia' or texto == ' noticia' or texto == 'notícias' or texto == ' notícias' or texto == 'notícia' or texto == ' notícia'):
+                bot.noticias()
+                
+            else:
+                bot.responde(texto)
     
 
 

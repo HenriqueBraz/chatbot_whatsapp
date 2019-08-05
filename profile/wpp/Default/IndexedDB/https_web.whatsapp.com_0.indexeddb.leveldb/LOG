@@ -1,0 +1,9 @@
+2019/08/04-20:33:17.872 2780 Reusing MANIFEST /home/henrique/chatbot/chatbot_whatsapp/profile/wpp/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2019/08/04-20:33:17.873 2780 Recovering log #7
+2019/08/04-20:33:17.923 2780 Reusing old log /home/henrique/chatbot/chatbot_whatsapp/profile/wpp/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000007.log 
+2019/08/04-20:33:25.092 2819 Compacting 1@1 + 1@2 files
+2019/08/04-20:33:25.712 2819 Generated table #10@1: 37708 keys, 1526267 bytes
+2019/08/04-20:33:25.712 2819 Compacted 1@1 + 1@2 files => 1526267 bytes
+2019/08/04-20:33:25.740 2819 compacted to: files[ 0 0 1 0 0 0 0 ]
+2019/08/04-20:33:25.742 2819 Delete type=2 #8
+2019/08/04-20:33:25.743 2819 Delete type=2 #5

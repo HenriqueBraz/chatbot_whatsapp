@@ -1,0 +1,6 @@
+2019/08/04-19:32:39.738 a2d Reusing MANIFEST leveldb/MANIFEST-000001
+2019/08/04-19:32:39.739 a2d Recovering log #12
+2019/08/04-19:32:39.740 a2d Reusing old log leveldb/000012.log 
+2019/08/04-20:25:40.347 25ad Level-0 table #17: started
+2019/08/04-20:25:40.427 25ad Level-0 table #17: 27793 bytes OK
+2019/08/04-20:25:40.520 25ad Delete type=0 #12
