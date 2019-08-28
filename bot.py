@@ -30,7 +30,7 @@ class wppbot:
         
         self.bot = ChatBot(nome_bot)
         self.trainer = ListTrainer(self.bot)
-        self.chrome = '/home/henrique/chatbot/chatbot_whatsapp/chromedriver' #Setamos onde está nosso chromedriver.
+        self.chrome = '/home/henrique/alfio_bot/chromedriver_linux64/chromedriver' #Setamos onde está nosso chromedriver.
         self.options = webdriver.ChromeOptions() #Configuramos um profile no chrome para não precisar logar no whats toda vez que iniciar o bot.
         self.options.add_argument(r"user-data-dir="+self.dir_path+"/profile/wpp")
         self.driver = webdriver.Chrome(self.chrome, chrome_options=self.options) #Iniciamos o driver.
@@ -100,6 +100,17 @@ class wppbot:
         self.botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
         self.botao_enviar.click()
         
+    def rapidinha(self,texto):
+        response = str(texto)
+        response = 'Alfio_bot: ' + response
+        self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[2]/div/div[2]',30)
+        self.caixa_de_mensagem = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]')
+        self.caixa_de_mensagem.send_keys(response)
+        time.sleep(1)
+        self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[3]/button',30)
+        self.botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
+        self.botao_enviar.click()    
+        
         
     def treina(self,nome_pasta):
         for treino in os.listdir(nome_pasta):
@@ -158,7 +169,7 @@ class wppbot:
         for news in noticias['articles']:
             titulo = news['title']
             link = news['url']
-            new = 'bot: ' + titulo + ' ' + link + '\n'
+            new = 'Alfio_bot: ' + titulo + ' ' + link + '\n'
 
             self.caixa_de_mensagem.send_keys(new)
             time.sleep(1)            
@@ -169,26 +180,36 @@ if __name__ == "__main__":
     
     logging.basicConfig(level=logging.DEBUG,format='%(asctime)s-%(levelname)s-%(message)s')
     logging.disable(logging.DEBUG)
-    bot = wppbot('Alfio')
-    bot.treina('treino')
+    bot = wppbot('Alfio_bot')
+    bot.treina('treino/')
     bot.inicia('Treino_bot')
-    bot.saudacao(['Alfio_bot: Oi sou o Alfio_bot e entrei no grupo!','Alfio_bot: Use :: no início para falar comigo!'])
+    bot.saudacao(['Alfio_bot: Oi sou o Alfio_bot e entrei no grupo!','Alfio_bot: Use :: no início para falar comigo!','Alfio_bot: Também posso dizer as noticias. Use ::noticias para ficar informado dos fatos mais recentes que eu conseguir ;)'])
     ultimo_texto = ''
     
     while True:
 
         texto = bot.escuta()
+        
+        if (texto == 'atrasado' or texto == 'atrasei' or texto == 'vou chegar tarde' or texto == 'onde é a sala' or texto == 'onde é a sala?' or texto == 'qual a sala?' or texto == 'qual a sala' or texto == 'que sala' or texto == 'onde é a aula?' or texto == 'onde e a aula?' or texto == 'vou me atrasar' or texto == 'to atrasado' or texto == 'e ae galera! Vou me atrasar!' or texto == 'e ae galera vo me atrasa' or texto == 'e ae galera vo me atrasa!'):
+                bot.rapidinha('Eu não me atraso nunca. NUNCA!')
+                time.sleep(15)
+        
+        elif (texto == 'show!' or texto == ' show!' or texto == 'show' or texto == ' show' or texto == 'legal' or texto == 'legal!' or texto == 'caralho!' or texto == 'caralho' or texto == 'que legal' or texto == 'que legal!' or texto == 'demais' or texto == 'demais!' or texto == 'massa' or texto == 'massa!' or texto == 'q orgulho' or texto == 'Dale' or texto == 'top' or texto == 'noes' or texto == 'Mito' or texto == 'Eita' or texto == 'Vamooo' or texto == 'caralho mano' or texto == 'BAITA' or texto == 'Valeu!' or texto == 'deuu' or texto == 'Que foda' or texto == 'Boa pai' or texto == 'boa pai' or texto == 'Caralho!' or texto == 'Caralho' or texto == 'boa' or texto == 'boaaa'):
+                bot.rapidinha('AMAZING!')
+                time.sleep(15)
 
-        if texto != ultimo_texto and re.match(r'^::', texto): ##Validação se possuí o comando :: no início para que ele responda.
+        elif texto != ultimo_texto and re.match(r'^::', texto): ##Validação se possuí o comando :: no início para que ele responda.
             ultimo_texto = texto
             texto = texto.replace('::', '')
             texto = texto.lower()
             if (texto == 'aprender' or texto == ' aprender' or texto == 'ensinar' or texto == ' ensinar'):
-                bot.aprender(texto,'Alfio_bot: Escreva a pergunta e após o ? a resposta.','Alfio_bot: Obrigado por ensinar. Não que eu precise, afinal eu sou o Alfio_bot, só errei uma vez na vida: quando pensei estar errado!','Alfio_bot: Você escreveu algo errado! Comece novamente..')
+                bot.aprender(texto,'Alfio_bot: Escreva ::  e depois  a pergunta; e após o ? a resposta.','Alfio_bot: Obrigado por ensinar. Não que eu precise, afinal eu sou o Alfio_bot, só errei uma vez na vida: quando pensei estar errado!','Alfio_bot: Você escreveu algo errado! Comece novamente..')
                 
             elif (texto == 'noticias' or texto == ' noticias' or texto == 'noticia' or texto == ' noticia' or texto == 'notícias' or texto == ' notícias' or texto == 'notícia' or texto == ' notícia'):
                 bot.noticias()
                 
+            
+            
             else:
                 bot.responde(texto)
     
