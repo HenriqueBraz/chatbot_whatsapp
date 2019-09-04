@@ -13,6 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from chatterbot.trainers import ListTrainer
 from chatterbot import ChatBot
+from connection import Connection
 import re
 import os
 import requests
@@ -34,7 +35,7 @@ class wppbot:
         self.options = webdriver.ChromeOptions() #Configuramos um profile no chrome para não precisar logar no whats toda vez que iniciar o bot.
         self.options.add_argument(r"user-data-dir="+self.dir_path+"/profile/wpp")
         self.driver = webdriver.Chrome(self.chrome, chrome_options=self.options) #Iniciamos o driver.
-    
+        self.con = Connection('sigma.blisk.solutions',9906,'root','mt14GWE04L6Csjuk')
     
     def element_presence(self,by,xpath,time):
         """
@@ -172,32 +173,37 @@ class wppbot:
             new = 'Alfio_bot: ' + titulo + ' ' + link + '\n'
 
             self.caixa_de_mensagem.send_keys(new)
-            time.sleep(1)            
+            time.sleep(1)
             
         
         
 if __name__ == "__main__":
     
+    con = Connection('sigma.blisk.solutions',9906,'root','mt14GWE04L6Csjuk')
     logging.basicConfig(level=logging.DEBUG,format='%(asctime)s-%(levelname)s-%(message)s')
     logging.disable(logging.DEBUG)
     bot = wppbot('Alfio_bot')
     bot.treina('treino/')
     bot.inicia('Treino_bot')
-    bot.saudacao(['Alfio_bot: Oi sou o Alfio_bot e entrei no grupo!','Alfio_bot: Use :: no início para falar comigo!','Alfio_bot: Também posso dizer as noticias. Use ::noticias para ficar informado dos fatos mais recentes que eu conseguir ;)'])
+    bot.saudacao(['Alfio_bot: Oi sou o Alfio_bot e entrei no grupo!','Alfio_bot: Use :: no início para falar comigo!','Alfio_bot: Agora o mais importante: tenho um vasto(?) conhecimento sobre provas. Digite ::prova? seguido do nome da disciplina, grau (p1,p2 ou p3) e nome do professor (tudo em minúsculo e sem assentos) da prova desejada, e eu consultarei no meu banco de dados. Ex. ::estatistica p1 rossana','Alfio_bot: e de quebra, também posso dizer as noticias. Use ::noticias para ficar informado dos fatos mais recentes que eu conseguir ;)'])
     ultimo_texto = ''
     
     while True:
 
         texto = bot.escuta()
         
-        if (texto == 'atrasado' or texto == 'atrasei' or texto == 'vou chegar tarde' or texto == 'onde é a sala' or texto == 'onde é a sala?' or texto == 'qual a sala?' or texto == 'qual a sala' or texto == 'que sala' or texto == 'onde é a aula?' or texto == 'onde e a aula?' or texto == 'vou me atrasar' or texto == 'to atrasado' or texto == 'e ae galera! Vou me atrasar!' or texto == 'e ae galera vo me atrasa' or texto == 'e ae galera vo me atrasa!'):
+        if texto != ultimo_texto and texto == 'atrasado' or texto == 'atrasei' or texto == 'vou chegar tarde' or texto == 'onde é a sala' or texto == 'onde é a sala?' or texto == 'qual a sala?' or texto == 'qual a sala' or texto == 'que sala' or texto == 'onde é a aula?' or texto == 'onde e a aula?' or texto == 'vou me atrasar' or texto == 'to atrasado' or texto == 'e ae galera! Vou me atrasar!' or texto == 'e ae galera vo me atrasa' or texto == 'e ae galera vo me atrasa!' or texto == 'que sala?' or texto == 'que sala':
                 bot.rapidinha('Eu não me atraso nunca. NUNCA!')
-                time.sleep(15)
         
-        elif (texto == 'show!' or texto == ' show!' or texto == 'show' or texto == ' show' or texto == 'legal' or texto == 'legal!' or texto == 'caralho!' or texto == 'caralho' or texto == 'que legal' or texto == 'que legal!' or texto == 'demais' or texto == 'demais!' or texto == 'massa' or texto == 'massa!' or texto == 'q orgulho' or texto == 'Dale' or texto == 'top' or texto == 'noes' or texto == 'Mito' or texto == 'Eita' or texto == 'Vamooo' or texto == 'caralho mano' or texto == 'BAITA' or texto == 'Valeu!' or texto == 'deuu' or texto == 'Que foda' or texto == 'Boa pai' or texto == 'boa pai' or texto == 'Caralho!' or texto == 'Caralho' or texto == 'boa' or texto == 'boaaa'):
+        elif texto != ultimo_texto and texto == 'show!' or texto == 'Show!' or texto == 'show' or texto == ' Show' or texto == 'legal' or texto == 'legal!' or texto == 'caralho!' or texto == 'caralho' or texto == 'que legal' or texto == 'que legal!' or texto == 'demais' or texto == 'demais!' or texto == 'massa' or texto == 'massa!' or texto == 'q orgulho' or texto == 'Dale' or texto == 'top' or texto == 'noes' or texto == 'Mito' or texto == 'Eita' or texto == 'Vamooo' or texto == 'caralho mano' or texto == 'BAITA' or texto == 'Valeu!' or texto == 'deuu' or texto == 'Que foda' or texto == 'Boa pai' or texto == 'boa pai' or texto == 'Caralho!' or texto == 'Caralho' or texto == 'boa' or texto == 'boaaa':
                 bot.rapidinha('AMAZING!')
-                time.sleep(15)
-
+                
+        elif texto != ultimo_texto and texto == 'provas' or texto == ' provas' or texto == 'prova' or texto == ' prova':
+                bot.rapidinha('Alguém aí falou em provas? AMAZING! Digite ::prova? seguido do nome da disciplina, grau (p1,p2 ou p3) e nome do professor (tudo em minúsculo e sem assentos) da prova desejada, e eu consultarei no meu banco de dados. Ex. ::estatistica p1 rossana')
+                
+        elif texto != ultimo_texto and texto == 'noticias' or texto == ' noticias' or texto == 'noticia' or texto == ' noticia' or texto == 'notícias' or texto == ' notícias' or texto == 'notícia' or texto == ' notícia':
+                bot.rapidinha('AMAZING! Alguém aí falou notícias? Eu sei tudo sobre notícias e fofocas. Pergunte pra mim, digite ::noticias')
+                
         elif texto != ultimo_texto and re.match(r'^::', texto): ##Validação se possuí o comando :: no início para que ele responda.
             ultimo_texto = texto
             texto = texto.replace('::', '')
@@ -207,9 +213,8 @@ if __name__ == "__main__":
                 
             elif (texto == 'noticias' or texto == ' noticias' or texto == 'noticia' or texto == ' noticia' or texto == 'notícias' or texto == ' notícias' or texto == 'notícia' or texto == ' notícia'):
                 bot.noticias()
+                    
                 
-            
-            
             else:
                 bot.responde(texto)
     
