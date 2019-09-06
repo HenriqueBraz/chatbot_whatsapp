@@ -35,7 +35,7 @@ class wppbot:
         self.options = webdriver.ChromeOptions() #Configuramos um profile no chrome para não precisar logar no whats toda vez que iniciar o bot.
         self.options.add_argument(r"user-data-dir="+self.dir_path+"/profile/wpp")
         self.driver = webdriver.Chrome(self.chrome, chrome_options=self.options) #Iniciamos o driver.
-        self.con = Connection('sigma.blisk.solutions',9906,'root','mt14GWE04L6Csjuk')
+        self.con = Connection('xxxxxxxxx',9906,'root','xxxxxxx')
     
     def element_presence(self,by,xpath,time):
         """
