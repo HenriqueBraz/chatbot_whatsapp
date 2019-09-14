@@ -1,6 +1,3 @@
-2019/08/04-19:32:37.825 a20 Reusing MANIFEST /home/henrique/chatbot/chatbot_whatsapp/profile/wpp/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2019/08/04-19:32:37.825 a20 Recovering log #4
-2019/08/04-19:32:38.372 a20 Reusing old log /home/henrique/chatbot/chatbot_whatsapp/profile/wpp/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000004.log 
-2019/08/04-20:33:05.682 2758 Level-0 table #8: started
-2019/08/04-20:33:05.861 2758 Level-0 table #8: 1344383 bytes OK
-2019/08/04-20:33:05.985 2758 Delete type=0 #4
+2019/09/14-00:47:38.434 5b2b Reusing MANIFEST /home/henrique/alfio_bot/chatbot_whatsapp/profile/wpp/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2019/09/14-00:47:38.434 5b2b Recovering log #16
+2019/09/14-00:47:38.469 5b2b Reusing old log /home/henrique/alfio_bot/chatbot_whatsapp/profile/wpp/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000016.log 

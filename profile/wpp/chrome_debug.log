@@ -1,4 +1,8 @@
-[10123:10123:0804/203312.361233:ERROR:sandbox_linux.cc(368)] InitializeSandbox() called with multiple threads in process gpu-process.
-[10080:10080:0804/203313.811819:WARNING:password_store_factory.cc(262)] Using basic (unencrypted) store for password storage. See https://chromium.googlesource.com/chromium/src/+/master/docs/linux_password_storage.md for more information about password storage options.
-[10080:10117:0804/203315.513800:WARNING:leveldb_database.cc(106)] Unable to open /home/henrique/chatbot/chatbot_whatsapp/profile/wpp/Default/shared_proto_db: Invalid argument: /home/henrique/chatbot/chatbot_whatsapp/profile/wpp/Default/shared_proto_db: does not exist (create_if_missing is false)
-[10123:10123:0804/203318.547060:WARNING:ipc_message_attachment_set.cc(49)] MessageAttachmentSet destroyed with unconsumed attachments: 0/1
+[23652:23652:0914/005331.658788:ERROR:sandbox_linux.cc(369)] InitializeSandbox() called with multiple threads in process gpu-process.
+[23618:23618:0914/005331.785186:WARNING:password_store_factory.cc(262)] Using basic (unencrypted) store for password storage. See https://chromium.googlesource.com/chromium/src/+/master/docs/linux_password_storage.md for more information about password storage options.
+[23618:23646:0914/005331.824307:WARNING:leveldb_database.cc(106)] Unable to open /home/henrique/alfio_bot/chatbot_whatsapp/profile/wpp/Default/shared_proto_db: Invalid argument: /home/henrique/alfio_bot/chatbot_whatsapp/profile/wpp/Default/shared_proto_db: does not exist (create_if_missing is false)
+[23652:23652:0914/005331.920674:ERROR:buffer_manager.cc(488)] [.DisplayCompositor]GL ERROR :GL_INVALID_OPERATION : glBufferData: <- error from previous GL command
+[23652:23722:0914/005458.880949:ERROR:latency_info.cc(149)] RenderWidgetHostImpl::OnSwapCompositorFrame, LatencyInfo vector size 523 is too big.
+[23618:23636:0914/005821.867632:ERROR:browser_process_sub_thread.cc(203)] Waited 9 ms for network service
+[23618:23618:0914/005821.873403:WARNING:pref_notifier_impl.cc(36)] Pref observer for browser.relaunch_notification_period found at shutdown.
+[23618:23618:0914/005821.873448:WARNING:pref_notifier_impl.cc(36)] Pref observer for media_router.cast_allow_all_ips found at shutdown.
