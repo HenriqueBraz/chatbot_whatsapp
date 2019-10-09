@@ -1,0 +1,30 @@
++------------+---------------------------+------+-----+---------+----------------+
+| Field      | Type                      | Null | Key | Default | Extra          |
++------------+---------------------------+------+-----+---------+----------------+
+| id         | int(11)                   | NO   | PRI | NULL    | auto_increment |
+| disciplina | varchar(100)              | NO   |     | NULL    |                |
+| prova      | enum('p1','p2','p3','p4') | NO   |     | NULL    |                |
+| professor  | varchar(50)               | YES  |     | NULL    |                |
+| arquivo    | varchar(200)              | NO   |     | NULL    |                |
++------------+---------------------------+------+-----+---------+----------------+
+5 rows in set (0.01 sec)
+
+
+CREATE TABLE provas(id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, disciplina VARCHAR(100) NOT NULL, prova ENUM('p1','p2','p3','p4') NOT NULL, professor VARCHAR(50) NULL, arquivo varchar(200) NOT NULL);
+
+INSERT INTO provas (disciplina,prova,professor,arquivo) VALUES ("estatistica","p1","rossana","/home/henrique/alfio_bot/chatbot_whatsapp/provas/provas-1.jpeg");
+
+INSERT INTO provas (disciplina,prova,professor,arquivo) VALUES ("estatistica","p1","rossana","/home/henrique/alfio_bot/chatbot_whatsapp/provas/provas-2.jpeg");
+
+INSERT INTO provas (disciplina,prova,professor,arquivo) VALUES ("estatistica","p1","rossana","/home/henrique/alfio_bot/chatbot_whatsapp/provas/provas-3.jpeg");
+
+
+
+
+'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'gerenciador_tarefas',
+        'USER': 'django',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '3306'
+

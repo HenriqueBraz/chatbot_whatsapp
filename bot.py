@@ -14,6 +14,7 @@ from selenium.webdriver.common.by import By
 from chatterbot.trainers import ListTrainer
 from chatterbot import ChatBot
 from connection import Connection
+from time import sleep
 import re
 import os
 import requests
@@ -37,6 +38,23 @@ class wppbot:
         self.driver = webdriver.Chrome(self.chrome, chrome_options=self.options) #Iniciamos o driver.
         self.con = Connection('sigma.blisk.solutions',9906,'root','mt14GWE04L6Csjuk')
     
+    
+    def scan_presence(self,by,xpath,time):
+        """
+        função responsável pela pausa até o carregamento do
+        elemento scan estar carregado
+        """
+        try:
+            element_present = EC.presence_of_element_located((By.XPATH, xpath))
+            WebDriverWait(self.driver, time).until(element_present)
+            logging.debug('retornei True do scan_presence')
+            return True
+        
+        except Exception as e:
+            logging.debug('retornei False do scan_presence')
+            return False
+        
+        
     def element_presence(self,by,xpath,time):
         """
          função responsável pela pausa até o carregamento do
@@ -51,9 +69,17 @@ class wppbot:
         
         
     def inicia(self,nome_contato):
-
+        flag = 0
         self.driver.get('https://web.whatsapp.com/')
-        self.driver.implicitly_wait(15)
+        while flag == 0:
+                if self.scan_presence(By.XPATH,'//*[@id="app"]/div/div/div[2]/div[1]/div/div[2]/div/div',30):
+                    logging.info('\nAguardando o scan do QR code do celular a ser utilizado para o envio de mensagens:\n')
+                    logging.info('O bot iniciará em 20 segundos após o reconhecimento do QRcode.\n')
+                    sleep(20)
+                
+                else:
+                    flag = 1
+        #self.driver.implicitly_wait(20)
         self.element_presence(By.XPATH,'//*[@id="side"]/div[1]/div/label/input',30)
         self.caixa_de_pesquisa = self.driver.find_element_by_xpath('//*[@id="side"]/div[1]/div/label/input')
         self.caixa_de_pesquisa.send_keys(nome_contato)
@@ -179,13 +205,16 @@ class wppbot:
         
 if __name__ == "__main__":
     
+    con = Connection()
+    print(con.busca_prova())
+    
     try:
-        con = Connection('sigma.blisk.solutions',9906,'root','mt14GWE04L6Csjuk')
+        #con = Connection('sigma.blisk.solutions',9906,'root','mt14GWE04L6Csjuk')
         logging.basicConfig(level=logging.DEBUG,format='%(asctime)s-%(levelname)s-%(message)s')
         logging.disable(logging.DEBUG)
         bot = wppbot('Alfio_bot')
         bot.treina('treino/')
-        bot.inicia('Treino_bot')
+        bot.inicia('Treino_bot') #configura o grupo do whatsapp escolhido
         bot.saudacao(['Alfio_bot: Oi sou o Alfio_bot e entrei no grupo!','Alfio_bot: Use :: no início para falar comigo!','Alfio_bot: Tenho um vasto(?) conhecimento sobre provas. Digite ::prova seguido do nome da disciplina, grau (p1,p2 ou p3) e nome do professor (tudo em minúsculo e sem assentos) da prova desejada, e eu consultarei no meu banco de dados. Ex. ::estatistica p1 rossana','Alfio_bot: e de quebra, também posso dizer as noticias. Use ::noticias para ficar informado dos fatos mais recentes que eu conseguir ;)'])
         ultimo_texto = ''
     
@@ -200,7 +229,7 @@ if __name__ == "__main__":
                 bot.rapidinha('AMAZING!')
                 
             elif texto != ultimo_texto and texto == 'provas' or texto == ' provas' or texto == 'prova' or texto == ' prova':
-                bot.rapidinha('Alguém aí falou em provas? AMAZING! Digite ::prova seguido do nome da disciplina, grau (p1,p2 ou p3) e nome do professor (tudo em minúsculo e sem assentos) da prova desejada, e eu consultarei no meu banco de dados. Ex. ::estatistica p1 rossana')
+                bot.rapidinha('Alguém aí falou em provas? AMAZING! Digite ::prova seguido do nome da disciplina, grau (p1,p2 ou p3) e nome do professor (tudo em minúsculo e sem assentos) da prova desejada, e eu consultarei no meu banco de dados. Ex. ::prova estatistica p1 rossana')
                 
             elif texto != ultimo_texto and texto == 'noticias' or texto == ' noticias' or texto == 'noticia' or texto == ' noticia' or texto == 'notícias' or texto == ' notícias' or texto == 'notícia' or texto == ' notícia':
                 bot.rapidinha('AMAZING! Alguém aí falou notícias? Eu sei tudo sobre notícias e fofocas. Pergunte pra mim, digite ::noticias')
