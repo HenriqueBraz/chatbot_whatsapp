@@ -1,3 +1,14 @@
-2019/10/09-00:42:09.075 23f4 Reusing MANIFEST /home/henrique/alfio_bot/chatbot_whatsapp/profile/wpp/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2019/10/09-00:42:09.076 23f4 Recovering log #16
-2019/10/09-00:42:09.175 23f4 Reusing old log /home/henrique/alfio_bot/chatbot_whatsapp/profile/wpp/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000016.log 
+2019/10/16-00:11:19.423 47e Reusing MANIFEST /home/henrique/alfio_bot/chatbot_whatsapp/profile/wpp/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2019/10/16-00:11:19.423 47e Recovering log #21
+2019/10/16-00:11:19.503 47e Reusing old log /home/henrique/alfio_bot/chatbot_whatsapp/profile/wpp/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000021.log 
+2019/10/16-00:12:31.898 5f7 Level-0 table #27: started
+2019/10/16-00:12:31.957 5f7 Level-0 table #27: 1384285 bytes OK
+2019/10/16-00:12:31.964 5f7 Delete type=0 #21
+2019/10/16-00:13:22.453 5f7 Compacting 1@1 + 2@2 files
+2019/10/16-00:13:22.571 5f7 Generated table #28@1: 42415 keys, 2231401 bytes
+2019/10/16-00:13:22.647 5f7 Generated table #29@1: 36998 keys, 1343109 bytes
+2019/10/16-00:13:22.647 5f7 Compacted 1@1 + 2@2 files => 3574510 bytes
+2019/10/16-00:13:22.652 5f7 compacted to: files[ 0 0 2 0 0 0 0 ]
+2019/10/16-00:13:22.652 5f7 Delete type=2 #23
+2019/10/16-00:13:22.652 5f7 Delete type=2 #24
+2019/10/16-00:13:22.652 5f7 Delete type=2 #27

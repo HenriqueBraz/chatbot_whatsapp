@@ -136,7 +136,57 @@ class wppbot:
         time.sleep(1)
         self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[3]/button',30)
         self.botao_enviar = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button')
-        self.botao_enviar.click()    
+        self.botao_enviar.click()
+        
+    def prova_sender(self,pathFileToSend):
+        try:
+            logging.info('\nInicio do prova_sender. \n')
+            self.element_presence(By.XPATH,'//*[@id="main"]/header/div[3]/div/div[2]/div/span',30)
+            button = self.driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/div/span') #seleciona o botão do clips
+            #button = self.driver.find_element_by_css_selector("span[data-icon='clip']") #seleciona o botão do clips
+            logging.debug(str(button) + '\n')
+            sleep(1)
+            button.click()
+            #button = self.driver.find_element_by_class_name('Ijb1Q')#seleciona o botão de anexar arquivos
+            self.element_presence(By.XPATH,'//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[1]/button',30)
+            button = self.driver.find_element_by_xpath('//*[@id="main"]/header/div[3]/div/div[2]/span/div/div/ul/li[1]/button') #seleciona o botão de anexar arquivos
+            logging.debug(str(button) + '\n')
+            sleep(1)
+            button.click()
+            image = self.driver.find_element_by_css_selector("input[type='file']") #seleciona o local do arquivo
+            sleep(1)
+            image.send_keys(pathFileToSend) # anexa o arquivo
+            sleep(1)
+            self.element_presence(By.XPATH,'//*[@id="app"]/div/div/div[2]/div[2]/span/div/span/div/div/div[2]/div/span/div/div[2]/div/div[3]/div[1]',30)
+            msg_box = self.driver.find_element_by_xpath('//*[@id="app"]/div/div/div[2]/div[2]/span/div/span/div/div/div[2]/div/span/div/div[2]/div/div[3]/div[1]') #seleciona o local do texto
+            sleep(2)
+            msg_box.send_keys('prova encontrada') # anexa o texto
+            self.element_presence(By.XPATH,'//div[contains(@class, "_1g8sv NOJWi")]',30)
+            button = self.driver.find_element_by_xpath('//div[contains(@class, "_1g8sv NOJWi")]')  # Seleciona botão enviar
+            logging.debug(str(button) + '\n')
+            sleep(1) 
+            button.click()
+            sleep(5) #pausa obrigatoria de 5 segundos
+            logging.info('Prova e texto enviados com sucesso')
+        except Exception as e:
+            logging.error('Erro no prova_sender:' + str(e))
+            
+            
+    def mensagem_sender(self,message):
+        try:
+            self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[2]/div/div[2]',30)
+            msg_box = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[2]/div/div[2]') #seleciona o local do texto
+            sleep(2)
+            msg_box.send_keys(message) # anexa o texto
+            self.element_presence(By.XPATH,'//*[@id="main"]/footer/div[1]/div[3]/button',30)
+            button = self.driver.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div[3]/button') #seleciona o botão de enviar
+            logging.debug(str(button) + '\n')
+            sleep(1) 
+            button.click()
+            sleep(1) #pausa obrigatoria de 5 segundos
+            logging.info('Mensagem de texto enviado com sucesso\n')
+        except Exception as e:
+            logging.error('Erro no mensagem_sender:' + str(e))    
         
         
     def treina(self,nome_pasta):
@@ -205,17 +255,15 @@ class wppbot:
         
 if __name__ == "__main__":
     
-    con = Connection()
-    print(con.busca_prova())
-    
     try:
+        con = Connection()
         #con = Connection('sigma.blisk.solutions',9906,'root','mt14GWE04L6Csjuk')
         logging.basicConfig(level=logging.DEBUG,format='%(asctime)s-%(levelname)s-%(message)s')
         logging.disable(logging.DEBUG)
         bot = wppbot('Alfio_bot')
         bot.treina('treino/')
         bot.inicia('Treino_bot') #configura o grupo do whatsapp escolhido
-        bot.saudacao(['Alfio_bot: Oi sou o Alfio_bot e entrei no grupo!','Alfio_bot: Use :: no início para falar comigo!','Alfio_bot: Tenho um vasto(?) conhecimento sobre provas. Digite ::prova seguido do nome da disciplina, grau (p1,p2 ou p3) e nome do professor (tudo em minúsculo e sem assentos) da prova desejada, e eu consultarei no meu banco de dados. Ex. ::estatistica p1 rossana','Alfio_bot: e de quebra, também posso dizer as noticias. Use ::noticias para ficar informado dos fatos mais recentes que eu conseguir ;)'])
+        bot.saudacao(['Alfio_bot: Oi sou o Alfio_bot e entrei no grupo!','Alfio_bot: Use :: no início para falar comigo!','Alfio_bot: Tenho um vasto(?) conhecimento sobre provas. Digite ::prova seguido do nome da disciplina, grau (p1,p2 ou p3) e nome do professor (tudo em minúsculo e sem assentos) da prova desejada, e eu consultarei no meu banco de dados. Ex. ::prova estatistica p1 rossana','Alfio_bot: e de quebra, também posso dizer as noticias. Use ::noticias para ficar informado dos fatos mais recentes que eu conseguir ;)'])
         ultimo_texto = ''
     
         while True:
@@ -250,6 +298,19 @@ if __name__ == "__main__":
                     texto = texto.split()
                     if (len(texto)) != 3:
                         bot.rapidinha('Você não digitou todos os parâmetros da pesquisa ou digitou incorretamente. Tente outra vez!')
+                    else:
+                        disciplina = texto[0]
+                        prova = texto[1]
+                        professor = texto[2] 
+                        lista_provas = con.busca_prova(disciplina, prova, professor)
+                        if lista_provas == []:
+                            message = 'Infelizmente não encontrei nenhuma prova no meu banco de dados, sorry...depois que fizer a prova, me ajude a expandir meus conhecimentos, envie um pdf da prova com o nome da disciplina, grau (p1,p2,p3 ou p4) e nome do professor para alfio_bot@gmail.com. Obrigado! '
+                            bot.mensagem_sender(message)
+                        else:
+                            for i in range(len(lista_provas)):
+                                bot.prova_sender(lista_provas[i])
+                            message = 'Aqui estão as provas que eu encontrei. Não precisa agradecer, "isto fica feliz em ser útil" (Só vai entender esta piada quem nasceu nos anos 80 ou leu Isaac Asimov...)'        
+                            bot.mensagem_sender(message)
                         
             elif texto != ultimo_texto and re.match(r'^::', texto): ##Validação se possuí o comando :: no início para que ele responda.
                 ultimo_texto = texto

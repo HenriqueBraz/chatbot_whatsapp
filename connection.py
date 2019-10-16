@@ -51,7 +51,7 @@ class Connection(object):
         #logging.disable(logging.DEBUG)
                          
         
-    def busca_prova(self):
+    def busca_prova(self, disciplina, prova, nome):
         """
         :return: retorna uma lista contendo os dados das provas
         """
@@ -60,7 +60,9 @@ class Connection(object):
              conn = pymysql.connect(host = self.host, port = self.port, user = self.user, passwd = self.bank_pass)
              cur = conn.cursor()
              cur.execute("USE gerenciador_tarefas")
-             cur.execute("SELECT * from provas")   
+             sql_data = (disciplina, prova, nome )
+             sql = "SELECT arquivo FROM provas WHERE disciplina = %s AND prova = %s AND professor = %s"
+             cur.execute(sql, sql_data)
              for row in cur: 
                  provas.append(row) 
         
@@ -71,14 +73,13 @@ class Connection(object):
         except Exception as e:
             logging.error('Erro em Connection, método busca_prova: ' + str(e)+'\n')
             
-    def data_bank_input_leads(self,lista):
+            
+    def input_provas(self, disciplina, prova, nome):
         """
-        função responsável por inputar os dados na tabela leads
-        :param lista: lista vinda do parser para ser salva no banco
-        :return: retorna False caso a lista esteja vazia
+        método para imputar as provas no banco, a ser implementado
         """                        
         try: #conexão
-
+          '''
             if lista == []:
                 return False
 
@@ -97,9 +98,9 @@ class Connection(object):
                 cur.close()
                 conn.close()
                 return True
-
+        '''
         except Exception as e:
-            logging.error('Erro em Conection, método data_bank_input, conexão: ' + str(e) + '\n')
+            logging.error('Erro em Conection, método input_provas: ' + str(e) + '\n')
             
             
    

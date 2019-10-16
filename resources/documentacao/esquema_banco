@@ -12,11 +12,11 @@
 
 CREATE TABLE provas(id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, disciplina VARCHAR(100) NOT NULL, prova ENUM('p1','p2','p3','p4') NOT NULL, professor VARCHAR(50) NULL, arquivo varchar(200) NOT NULL);
 
-INSERT INTO provas (disciplina,prova,professor,arquivo) VALUES ("estatistica","p1","rossana","/home/henrique/alfio_bot/chatbot_whatsapp/provas/provas-1.jpeg");
+INSERT INTO provas (disciplina,prova,professor,arquivo) VALUES ("estatistica","p1","rossana","/home/henrique/alfio_bot/chatbot_whatsapp/resources/provas/provas-1.jpeg");
 
-INSERT INTO provas (disciplina,prova,professor,arquivo) VALUES ("estatistica","p1","rossana","/home/henrique/alfio_bot/chatbot_whatsapp/provas/provas-2.jpeg");
+INSERT INTO provas (disciplina,prova,professor,arquivo) VALUES ("estatistica","p1","rossana","/home/henrique/alfio_bot/chatbot_whatsapp/resources/provas/provas-2.jpeg");
 
-INSERT INTO provas (disciplina,prova,professor,arquivo) VALUES ("estatistica","p1","rossana","/home/henrique/alfio_bot/chatbot_whatsapp/provas/provas-3.jpeg");
+INSERT INTO provas (disciplina,prova,professor,arquivo) VALUES ("estatistica","p1","rossana","/home/henrique/alfio_bot/chatbot_whatsapp/resources/provas/provas-3.jpeg");
 
 
 
